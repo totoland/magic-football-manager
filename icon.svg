@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2CC56F"/>
+      <stop offset="1" stop-color="#0B6E4F"/>
+    </linearGradient>
+    <linearGradient id="pitch" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#114E39"/>
+      <stop offset="1" stop-color="#0A3527"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#tile)"/>
+  <g transform="translate(256 262)">
+    <!-- shield -->
+    <path d="M0 -150 L118 -108 V0 C118 86 64 150 0 180 C-64 150 -118 86 -118 0 V-108 Z"
+          fill="url(#pitch)" stroke="#EAF7F0" stroke-width="10" stroke-linejoin="round"/>
+    <!-- pitch markings -->
+    <line x1="-118" y1="0" x2="118" y2="0" stroke="#EAF7F0" stroke-width="7" opacity="0.85"/>
+    <circle cx="0" cy="0" r="40" fill="none" stroke="#EAF7F0" stroke-width="7" opacity="0.85"/>
+    <circle cx="0" cy="0" r="9" fill="#EAF7F0" opacity="0.9"/>
+    <path d="M-46 -150 H46 V-118 H-46 Z" fill="none" stroke="#EAF7F0" stroke-width="7" opacity="0.7"/>
+    <path d="M-40 150 H40 V130 H-40 Z" fill="none" stroke="#EAF7F0" stroke-width="7" opacity="0.7"/>
+  </g>
+</svg>
