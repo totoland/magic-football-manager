@@ -9,10 +9,10 @@
    Run:  node build/build-dist.mjs
    Needs internet at BUILD time (fonts). Runtime is 100% offline.
    ============================================================ */
-import { readFileSync, writeFileSync, mkdirSync, rmSync, cpSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, rmSync, cpSync, existsSync } from "node:fs";
 import { execSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
-import { dirname, resolve, basename } from "node:path";
+import { dirname, resolve } from "node:path";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const r = (p) => resolve(root, p);
@@ -35,34 +35,17 @@ cpSync(r("vendor/react-dom.production.min.js"), r("dist/vendor/react-dom.product
 for (const f of ["styles.css", "manifest.webmanifest", "icon.svg"]) cpSync(r(f), r(`dist/${f}`));
 cpSync(r("icons"), r("dist/icons"), { recursive: true });
 
-// ---- 4. vendor fonts (best-effort; falls back to system-ui on failure) ----
-const FONT_URL =
-  "https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900" +
-  "&family=Hanken+Grotesk:wght@400;500;600;700&display=swap";
+// ---- 4. fonts: copy committed vendor/fonts/ (100% offline build) --------
+// Refresh the vendored woff2 with `node build/fetch-fonts.mjs` if the design
+// ever changes the font set; the normal build never touches the network.
 let haveFonts = false;
-try {
-  const UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 " +
-             "(KHTML, like Gecko) Chrome/124.0 Safari/537.36";
-  const css = await (await fetch(FONT_URL, { headers: { "User-Agent": UA } })).text();
-  // Keep only latin @font-face blocks; download each woff2 and localise the url().
-  const re = /\/\*\s*latin\s*\*\/\s*@font-face\s*\{[^}]*\}/g;
-  let out = "";
-  let n = 0;
-  for (const block of css.match(re) || []) {
-    const m = block.match(/url\((https:\/\/[^)]+\.woff2)\)/);
-    if (!m) continue;
-    const name = basename(new URL(m[1]).pathname);
-    const buf = Buffer.from(await (await fetch(m[1], { headers: { "User-Agent": UA } })).arrayBuffer());
-    writeFileSync(r(`dist/fonts/${name}`), buf);
-    out += block.replace(m[1], `./${name}`) + "\n";
-    n++;
-  }
-  if (n === 0) throw new Error("no latin font faces parsed");
-  writeFileSync(r("dist/fonts/fonts.css"), out);
+if (existsSync(r("vendor/fonts/fonts.css"))) {
+  cpSync(r("vendor/fonts"), r("dist/fonts"), { recursive: true });
   haveFonts = true;
-  console.log(`  fonts: vendored ${n} woff2 (latin)`);
-} catch (e) {
-  console.warn(`  fonts: SKIPPED (${e.message}) — using system-ui fallback`);
+  console.log("  fonts: copied from vendor/fonts/ (offline)");
+} else {
+  console.warn("  fonts: vendor/fonts/ missing — using system-ui fallback " +
+               "(run: node build/fetch-fonts.mjs)");
 }
 
 // ---- 5. index.html — strip every CDN reference --------------------------
