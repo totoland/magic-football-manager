@@ -1,0 +1,10 @@
+.git
+.gitignore
+.DS_Store
+node_modules
+tests
+build
+vendor
+football-manager-standalone.html
+README.md
+*.log

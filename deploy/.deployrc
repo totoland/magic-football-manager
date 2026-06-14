@@ -1,0 +1,5 @@
+# Config for deploy/deploy.sh — totoland Pi k3s cluster
+PI_SSH=pi@192.168.0.125
+IMAGE_NAME=football-manager
+APP_NAME=football-manager
+GITOPS_PATH=/home/pi/workspace/migrate-eks
