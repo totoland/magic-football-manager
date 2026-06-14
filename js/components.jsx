@@ -17,11 +17,6 @@ const Ic = {
   download: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 4v12M7 11l5 5 5-5M5 20h14"/></svg>,
 };
 
-const jersey = (id) => {
-  const n = parseInt(String(id).replace(/\D/g, ""), 10);
-  return Number.isFinite(n) ? (n % 99) + 1 : "—";
-};
-
 /* =========================================================
    TOAST (transient notifications — §8 final-half notice etc.)
    ========================================================= */
@@ -174,7 +169,6 @@ function Token({ player, onRemove, onTap }) {
   return (
     <div className="fm-token" title="Drag to move · tap to swap"
       onPointerDown={(e) => { e.stopPropagation(); drag.startDrag(player, e, { onTap }); }}>
-      <span className="fm-token-num">{jersey(player.id)}</span>
       <span className="fm-token-name">{player.name}</span>
       <button className="fm-token-x" aria-label={"Remove " + player.name}
         onPointerDown={(e) => e.stopPropagation()}
@@ -413,5 +407,5 @@ function PlayerPickerModal({ slotLabel, kind, players, assignments, playtime, cu
 
 Object.assign(window, {
   Ic, Toast, Header, Controls, Board, Slot, Token, PlayerPool, PlayerBadge,
-  ImportPanel, Summary, AddPlayerModal, PlayerPickerModal, jersey,
+  ImportPanel, Summary, AddPlayerModal, PlayerPickerModal,
 });

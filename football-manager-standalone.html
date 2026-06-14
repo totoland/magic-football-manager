@@ -363,13 +363,12 @@ body {
   background: var(--surface-3); color: var(--text);
   border: 2px solid var(--accent-bright); border-radius: 9px;
 }
-.fm-token-num { font-weight: 800; font-size: 16px; line-height: 1; letter-spacing: -.02em; }
-.fm-zone-sub .fm-token-num { font-size: 13px; }
 .fm-token-name {
-  font-weight: 700; font-size: 9.5px; letter-spacing: .01em; line-height: 1;
-  max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 2px;
+  font-weight: 800; font-size: 11.5px; letter-spacing: .01em; line-height: 1.05;
+  text-align: center; padding: 0 4px;
+  max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
-.fm-zone-sub .fm-token-name { font-size: 8px; }
+.fm-zone-sub .fm-token-name { font-size: 9px; padding: 0 2px; }
 .fm-token-x {
   position: absolute; top: -6px; right: -6px;
   width: 17px; height: 17px; border-radius: 50%;
@@ -395,6 +394,28 @@ body {
   box-shadow: 0 2px 6px rgba(0,0,0,.4);
 }
 @keyframes fm-pulse { 0%,100%{ opacity:.55 } 50%{ opacity:1 } }
+
+/* ====== Small phones: shrink board tokens so they don't collide / mis-tap ====== */
+@media (max-width: 480px) {
+  .fm-slot { width: 74px; }
+  .fm-zone-starter { width: 46px; height: 46px; }
+  .fm-zone-sub { width: 32px; height: 32px; }
+  .fm-slot-zones { gap: 3px; }
+  .fm-slot-label { font-size: 9px; padding: 1px 5px; }
+  .fm-token-name { font-size: 10px; }
+  .fm-zone-sub .fm-token-name { font-size: 8px; }
+  .fm-zone-starter .fm-zone-plus { font-size: 18px; }
+  .fm-zone-sub .fm-zone-plus { font-size: 13px; }
+  .fm-zone-tag { font-size: 7px; top: -6px; }
+  .fm-token-x { width: 16px; height: 16px; top: -5px; right: -5px; }
+}
+@media (max-width: 380px) {
+  .fm-slot { width: 62px; }
+  .fm-zone-starter { width: 40px; height: 40px; }
+  .fm-zone-sub { width: 27px; height: 27px; }
+  .fm-token-name { font-size: 9px; }
+  .fm-zone-sub .fm-token-name { font-size: 7px; }
+}
 
 /* ====== Player pool ====== */
 .fm-pool { padding: var(--pad); display: flex; flex-direction: column; gap: var(--gap); }
@@ -1262,10 +1283,6 @@ const Ic = {
   upload: /* @__PURE__ */ React.createElement("svg", { viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.8", strokeLinecap: "round", strokeLinejoin: "round" }, /* @__PURE__ */ React.createElement("path", { d: "M12 16V4M7 9l5-5 5 5M5 20h14" })),
   download: /* @__PURE__ */ React.createElement("svg", { viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.8", strokeLinecap: "round", strokeLinejoin: "round" }, /* @__PURE__ */ React.createElement("path", { d: "M12 4v12M7 11l5 5 5-5M5 20h14" }))
 };
-const jersey = (id) => {
-  const n = parseInt(String(id).replace(/\D/g, ""), 10);
-  return Number.isFinite(n) ? n % 99 + 1 : "\u2014";
-};
 function Toast({ toast }) {
   if (!toast) return null;
   return /* @__PURE__ */ React.createElement("div", { className: "fm-toast " + (toast.kind || "info"), role: "status", "aria-live": "polite" }, /* @__PURE__ */ React.createElement("span", { className: "fm-toast-dot" }), toast.msg);
@@ -1370,7 +1387,6 @@ function Token({ player, onRemove, onTap }) {
         drag.startDrag(player, e, { onTap });
       }
     },
-    /* @__PURE__ */ React.createElement("span", { className: "fm-token-num" }, jersey(player.id)),
     /* @__PURE__ */ React.createElement("span", { className: "fm-token-name" }, player.name),
     /* @__PURE__ */ React.createElement(
       "button",
@@ -1517,8 +1533,7 @@ Object.assign(window, {
   ImportPanel,
   Summary,
   AddPlayerModal,
-  PlayerPickerModal,
-  jersey
+  PlayerPickerModal
 });
 
 ;
