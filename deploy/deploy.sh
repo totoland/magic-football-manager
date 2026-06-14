@@ -11,8 +11,11 @@ source deploy/.deployrc
 TAG="${1:-$(git rev-parse --short HEAD)}"
 IMAGE="${IMAGE_NAME}:${TAG}"
 
+echo "▸ build dist/ (precompile JSX, vendor React + fonts — no CDN)"
+node build/build-dist.mjs
+
 echo "▸ build ${IMAGE} (linux/arm64)"
-docker build --platform linux/arm64 -t "${IMAGE}" .
+docker build --platform linux/arm64 --provenance=false --sbom=false -t "${IMAGE}" .
 
 echo "▸ ship to ${PI_SSH} containerd"
 docker save "${IMAGE}" | ssh "${PI_SSH}" 'sudo k3s ctr images import -'
